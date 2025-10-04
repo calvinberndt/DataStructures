@@ -9,6 +9,7 @@ public class RemoveLastCommand extends UndoCommand {
 
    @Override
    public void execute() {
-      // TODO: Type your code here
+      sourceList.remove(sourceList.size() - 1);
+
    }
 }

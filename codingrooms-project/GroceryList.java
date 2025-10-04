@@ -14,21 +14,28 @@ public class GroceryList {
 }
 
    public void removeAtWithUndo(int removalIndex) {
-      
+      String itemToRemove = listItems.get(removalIndex);
+
       listItems.remove(removalIndex);
 
-      undoStack.push(new InsertAtCommand(listItems, removalIndex));
+      undoStack.push(new InsertAtCommand(listItems, removalIndex, itemToRemove));
 
    }
 
    public void swapWithUndo(int index1, int index2) {
-      // TODO: Type your code here
+      String item1 = listItems.get(index1);
+      String item2 = listItems.get(index2);
+
+      listItems.set(index1, item2);
+      listItems.set(index2, item1);
+
+      undoStack.push(new SwapCommand(listItems, index1, index2, item1, item2));
 
    }
 
    // Pop and execute the command at the top of the stack
    public void executeUndo() {
-      // TODO: Type Your code here
+      undoStack.pop().execute();
    }
 
    public int getListSize() {
