@@ -6,15 +6,18 @@ public class GroceryList {
    protected Stack<UndoCommand> undoStack = new Stack<UndoCommand>();
 
    public void addWithUndo(String newItemName) {
-      // Add the new list item
+     // Add the new list item
       listItems.add(newItemName);
 
       // Make an undo command that removes the last item and push onto stack
       undoStack.push(new RemoveLastCommand(listItems));
-   }
+}
 
    public void removeAtWithUndo(int removalIndex) {
-      // TODO: Type your code here
+      
+      listItems.remove(removalIndex);
+
+      undoStack.push(new InsertAtCommand(listItems, removalIndex));
 
    }
 
