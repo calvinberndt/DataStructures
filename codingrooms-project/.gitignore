@@ -1,0 +1,10 @@
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar
+*.gz
+*.bz2
+*.rar
+*.7z

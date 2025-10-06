@@ -19,8 +19,8 @@ public class SwapCommand extends UndoCommand {
 
    @Override
    public void execute() {
-      sourceList.set(index1, item2);
-      sourceList.set(index2, item1);
+      sourceList.set(index1, item1);
+      sourceList.set(index2, item2);
    }
 
 }

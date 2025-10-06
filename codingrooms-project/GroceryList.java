@@ -8,6 +8,7 @@ public class GroceryList {
    public void addWithUndo(String newItemName) {
      // Add the new list item
       listItems.add(newItemName);
+      
 
       // Make an undo command that removes the last item and push onto stack
       undoStack.push(new RemoveLastCommand(listItems));
