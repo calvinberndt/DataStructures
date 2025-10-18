@@ -4,7 +4,7 @@ public class CourseGradebook extends Gradebook {
 
    // TODO: Declare any protected fields here (change placeholder field below)
    /*
-    assignmentName: {studentID: grade}
+    {assignmentName: {studentID: grade}}
     */
    protected HashMap<String, HashMap<Integer, Double>> assignmentGrade;
 
