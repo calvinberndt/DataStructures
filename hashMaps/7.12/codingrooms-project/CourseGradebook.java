@@ -29,7 +29,10 @@ public class CourseGradebook extends Gradebook {
    public double getScore(String assignmentName, Integer studentID) {
       HashMap<Integer, Double> student = assignmentGrade.get(assignmentName);
       if(student != null){
-         return student.get(studentID);
+         Double score = student.get(studentID);
+         if (score != null){
+            return score;
+         }
       }
       return Double.NaN;
    }
@@ -66,7 +69,9 @@ public class CourseGradebook extends Gradebook {
          studentIDs.addAll(map.keySet()); //add all the studentID's from the assigment
       }
       //Convert from set to an ArrayList
-      return new ArrayList<Integer>(studentIDs);
+      ArrayList<Integer> students =  new ArrayList<Integer>(studentIDs);
+      Collections.sort(students);
+      return students;
 
    }
 
