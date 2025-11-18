@@ -23,7 +23,7 @@ public class BSTNode {
    public int count() {
       int leftCount = 0;
       if (left != null) {
-         leftCount = left.count();
+         leftCount = left.count(); //.count() calls the count method recursively
       }
       int rightCount = 0;
       if (right != null) {
