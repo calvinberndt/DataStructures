@@ -1,0 +1,24 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "Main",
+            "projectName": "codingrooms-project_89acba42"
+        },
+        {
+            "type": "java",
+            "name": "Launch Main",
+            "request": "launch",
+            "mainClass": "Main",
+            "projectName": "codingrooms-project",
+            "classPaths": [
+                "build"
+            ],
+            "preLaunchTask": "build"
+        }
+    ]
+}
+
