@@ -119,9 +119,22 @@ class Trie {
   }
 }
 
+// Calculate the width needed for a subtree
+const calculateSubtreeWidth = (node, minSpacing = 50) => {
+  if (node.children.length === 0) {
+    return minSpacing;
+  }
+  let totalWidth = 0;
+  node.children.forEach(child => {
+    totalWidth += calculateSubtreeWidth(child, minSpacing);
+  });
+  return Math.max(minSpacing, totalWidth);
+};
+
 const collectTreeElements = (node, depth = 0, x = 0, parentX = null, parentY = null, highlighted = [], lines = [], nodes = [], bounds = { minX: Infinity, maxX: -Infinity, maxY: 0 }) => {
   const nodeRadius = 18;
-  const levelHeight = 60;
+  const levelHeight = 70;
+  const minSpacing = 55;
   const y = depth * levelHeight + 30;
 
   // Track bounds
@@ -142,9 +155,16 @@ const collectTreeElements = (node, depth = 0, x = 0, parentX = null, parentY = n
     key: `node-${depth}-${x}`
   });
 
+  // Calculate total width needed for all children
+  const childWidths = node.children.map(child => calculateSubtreeWidth(child, minSpacing));
+  const totalChildrenWidth = childWidths.reduce((sum, w) => sum + w, 0);
+
+  // Position children based on their subtree widths
+  let currentX = x - totalChildrenWidth / 2;
   node.children.forEach((child, i) => {
-    const spread = Math.max(50, 220 / (depth + 1));
-    const childX = x + (i - (node.children.length - 1) / 2) * spread;
+    const childWidth = childWidths[i];
+    const childX = currentX + childWidth / 2;
+    currentX += childWidth;
     collectTreeElements(child, depth + 1, childX, x, y, highlighted, lines, nodes, bounds);
   });
 
