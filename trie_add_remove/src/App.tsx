@@ -119,38 +119,49 @@ class Trie {
   }
 }
 
-const collectTreeElements = (node, depth = 0, x = 0, parentX = null, parentY = null, highlighted = [], lines = [], nodes = []) => {
+const collectTreeElements = (node, depth = 0, x = 0, parentX = null, parentY = null, highlighted = [], lines = [], nodes = [], bounds = { minX: Infinity, maxX: -Infinity, maxY: 0 }) => {
   const nodeRadius = 18;
   const levelHeight = 60;
   const y = depth * levelHeight + 30;
-  
+
+  // Track bounds
+  bounds.minX = Math.min(bounds.minX, x - nodeRadius);
+  bounds.maxX = Math.max(bounds.maxX, x + nodeRadius);
+  bounds.maxY = Math.max(bounds.maxY, y + nodeRadius);
+
   const isHighlighted = highlighted.includes(node.label);
   const isTerminal = node.label === '∅';
-  
+
   if (parentX !== null) {
     lines.push({ x1: parentX, y1: parentY, x2: x, y2: y, key: `line-${depth}-${x}` });
   }
-  
+
   nodes.push({
     x, y, nodeRadius, isTerminal, isHighlighted,
     label: node.label === 'root' ? '○' : node.label,
     key: `node-${depth}-${x}`
   });
-  
+
   node.children.forEach((child, i) => {
-    const spread = Math.max(40, 200 / (depth + 1));
+    const spread = Math.max(50, 220 / (depth + 1));
     const childX = x + (i - (node.children.length - 1) / 2) * spread;
-    collectTreeElements(child, depth + 1, childX, x, y, highlighted, lines, nodes);
+    collectTreeElements(child, depth + 1, childX, x, y, highlighted, lines, nodes, bounds);
   });
-  
-  return { lines, nodes };
+
+  return { lines, nodes, bounds };
 };
 
 const TreeVisualization = ({ treeData, highlighted }) => {
-  const { lines, nodes } = collectTreeElements(treeData, 0, 200, null, null, highlighted, [], []);
-  
+  const { lines, nodes, bounds } = collectTreeElements(treeData, 0, 300, null, null, highlighted, [], [], { minX: Infinity, maxX: -Infinity, maxY: 0 });
+
+  // Calculate dynamic dimensions with padding
+  const padding = 30;
+  const width = Math.max(400, bounds.maxX - bounds.minX + padding * 2);
+  const height = Math.max(150, bounds.maxY + padding);
+  const viewBoxX = bounds.minX - padding;
+
   return (
-    <g>
+    <svg width={width} height={height} viewBox={`${viewBoxX} 0 ${width} ${height}`}>
       {lines.map(line => (
         <line key={line.key} x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#64748b" strokeWidth={2} />
       ))}
@@ -169,7 +180,7 @@ const TreeVisualization = ({ treeData, highlighted }) => {
           </text>
         </g>
       ))}
-    </g>
+    </svg>
   );
 };
 
@@ -411,10 +422,8 @@ export default function TrieLearningPlatform() {
             
             <div className="bg-slate-800 rounded-xl p-6">
               <h2 className="text-xl font-semibold mb-4">Trie Visualization</h2>
-              <div className="bg-slate-900 rounded-lg h-80 overflow-auto">
-                <svg width="100%" height="300" viewBox="0 0 400 300">
-                  <TreeVisualization treeData={treeData} highlighted={steps[currentStep]?.char ? [steps[currentStep].char === '\\0' ? '∅' : steps[currentStep].char] : []} />
-                </svg>
+              <div className="bg-slate-900 rounded-lg min-h-[200px] max-h-[500px] overflow-auto">
+                <TreeVisualization treeData={treeData} highlighted={steps[currentStep]?.char ? [steps[currentStep].char === '\\0' ? '∅' : steps[currentStep].char] : []} />
               </div>
               <p className="text-xs text-slate-500 mt-2 text-center">○ = Root node, ∅ = Terminal node (end of string)</p>
             </div>
